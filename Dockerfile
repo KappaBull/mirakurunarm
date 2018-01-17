@@ -3,9 +3,8 @@ LABEL maintainer "KappaBull <kappabull@gmail.com>"
 
 ENV DOCKER="YES"
 
-RUN set -x && \
-	apk update && \
-	apk add \
+RUN apk update
+RUN apk add \
 		bash \
 		'nodejs>=6.5.0' \
 		nodejs-npm \
