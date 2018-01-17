@@ -3,10 +3,9 @@ LABEL maintainer "KappaBull <kappabull@gmail.com>"
 
 ENV DOCKER="YES"
 
-RUN set -x \
-	&& apk update \
-	\
-	&& apk add \
+RUN set -x && \
+	apk update && \
+	apk add \
 		bash \
 		'nodejs>=6.5.0' \
 		nodejs-npm \
@@ -16,9 +15,8 @@ RUN set -x \
 		pcsc-lite-libs \
 		curl \
 		ca-certificates \
-		util-linux \
-		\
-	&& apk add --virtual .build-deps \
+		util-linux &&\
+	apk add --virtual .build-deps \
 		git \
 		make \
 		gcc \
