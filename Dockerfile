@@ -5,7 +5,6 @@ ENV DOCKER="YES"
 
 RUN set -x \
 	&& apk update \
-	#&& apk upgrade --update \
 	&& apk add \
 		bash \
 		'nodejs>=6.5.0' \
