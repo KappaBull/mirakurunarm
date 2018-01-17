@@ -1,4 +1,4 @@
-FROM resin/armhf-alpine:edge
+FROM gliderlabs/alpine:edge
 LABEL maintainer "KappaBull <kappabull@gmail.com>"
 
 ENV DOCKER="YES"
