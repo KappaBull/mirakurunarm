@@ -1,10 +1,12 @@
-FROM armhf/alpine:edge
+FROM resin/armhf-alpine:edge
 LABEL maintainer "KappaBull <kappabull@gmail.com>"
 
 ENV DOCKER="YES"
 
-RUN apk update
-RUN apk add \
+RUN set -x \
+	&& apk update \
+	#&& apk upgrade --update \
+	&& apk add \
 		bash \
 		'nodejs>=6.5.0' \
 		nodejs-npm \
@@ -14,8 +16,9 @@ RUN apk add \
 		pcsc-lite-libs \
 		curl \
 		ca-certificates \
-		util-linux &&\
-	apk add --virtual .build-deps \
+		util-linux \
+	\
+	&& apk add --virtual .build-deps \
 		git \
 		make \
 		gcc \
@@ -28,8 +31,9 @@ RUN apk add \
 		eudev-dev \
 		libevent-dev \
 		pcsc-lite-dev \
-		libusb-dev
-RUN npm install pm2 -g \
+		libusb-dev \
+	\
+	&& npm install pm2 -g \
 	\
 	&& npm install arib-b25-stream-test -g --unsafe \
 	\
