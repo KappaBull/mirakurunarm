@@ -5,6 +5,7 @@ ENV DOCKER="YES"
 
 RUN set -x \
 	&& apk update \
+	\
 	&& apk add \
 		bash \
 		'nodejs>=6.5.0' \
@@ -16,7 +17,7 @@ RUN set -x \
 		curl \
 		ca-certificates \
 		util-linux \
-	\
+		\
 	&& apk add --virtual .build-deps \
 		git \
 		make \
@@ -30,9 +31,8 @@ RUN set -x \
 		eudev-dev \
 		libevent-dev \
 		pcsc-lite-dev \
-		libusb-dev \
-	\
-	&& npm install pm2 -g \
+		libusb-dev
+RUN npm install pm2 -g \
 	\
 	&& npm install arib-b25-stream-test -g --unsafe \
 	\
