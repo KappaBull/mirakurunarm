@@ -1,4 +1,4 @@
-FROM resin/rpi-raspbian:latest
+FROM easypi/alpine-arm:edge
 LABEL maintainer "KappaBull <kappabull@gmail.com>"
 
 ENV DOCKER="YES"
