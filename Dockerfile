@@ -1,4 +1,4 @@
-FROM gliderlabs/alpine:edge
+FROM resin/rpi-raspbian:latest
 LABEL maintainer "KappaBull <kappabull@gmail.com>"
 
 ENV DOCKER="YES"
