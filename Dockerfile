@@ -1,11 +1,14 @@
+#FROM scratch
 FROM ogomez/arm32v7-alpine
-LABEL maintainer "KappaBull <kappabull@gmail.com>"
+LABEL maintainer "KappaBull <kappa8v11@gmail.com>"
+LABEL architecture="ARM32v7"
 
 ENV DOCKER="YES"
 COPY services.sh /usr/local/bin
-RUN set -x \
-	&& apk update \
-#	&& apk upgrade --update \
+RUN echo http://dl-cdn.alpinelinux.org/alpine/edge/community/ >> /etc/apk/repositories \
+	&& set -x \
+#	&& apk update \
+	&& apk upgrade --update \
 	&& apk add \
 		bash \
 		'nodejs>=6.5.0' \
@@ -33,6 +36,7 @@ RUN set -x \
 		pcsc-lite-dev \
 		libusb-dev \
 		unzip \
+		linux-headers \
 	\
 	&& npm install pm2 -g --unsafe \
 	\
