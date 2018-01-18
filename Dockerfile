@@ -2,7 +2,7 @@ FROM ogomez/arm32v7-alpine
 LABEL maintainer "KappaBull <kappabull@gmail.com>"
 
 ENV DOCKER="YES"
-
+COPY services.sh /usr/local/bin
 RUN set -x \
 	&& apk update \
 #	&& apk upgrade --update \
@@ -32,6 +32,7 @@ RUN set -x \
 		libevent-dev \
 		pcsc-lite-dev \
 		libusb-dev \
+		unzip \
 	\
 	&& npm install pm2 -g --unsafe \
 	\
@@ -40,20 +41,20 @@ RUN set -x \
 	# mirakurun
 	&& npm install mirakurun@latest -g --unsafe --production \
 	\
-	# recpt1
-	&& git clone https://github.com/stz2012/recpt1 /tmp/recpt1 \
-	&& cd /tmp/recpt1/recpt1 \
-	&& ./autogen.sh \
-	&& ./configure \
-	&& sed -i '/#include <sys\/msg.h>/d' recpt1core.h \
-	&& sed -i -E 's!(#include <sys/msg.h>)!#undef _GNU_SOURCE\n#undef _BSD_SOURCE\n\1!' recpt1.c \
-	&& sed -i -E 's!(#include <sys/msg.h>)!#undef _GNU_SOURCE\n#undef _BSD_SOURCE\n\1!' recpt1ctl.c \
-	&& sed -i -E 's!(#include <sys/msg.h>)!#undef _GNU_SOURCE\n#undef _BSD_SOURCE\n\1!' checksignal.c \
-	&& sed -i -E 's!(#include <ctype.h>)!\1\n#include <event.h>!' tssplitter_lite.c \
-	&& sed -i 's#-I../driver#-I../driver -I/usr/local/include#' Makefile \
-	&& make \
-	&& make install \
-	\
+	# recpt1 PT3Command?
+	# && git clone https://github.com/stz2012/recpt1 /tmp/recpt1 \
+	# && cd /tmp/recpt1/recpt1 \
+	# && ./autogen.sh \
+	# && ./configure \
+	# && sed -i '/#include <sys\/msg.h>/d' recpt1core.h \
+	# && sed -i -E 's!(#include <sys/msg.h>)!#undef _GNU_SOURCE\n#undef _BSD_SOURCE\n\1!' recpt1.c \
+	# && sed -i -E 's!(#include <sys/msg.h>)!#undef _GNU_SOURCE\n#undef _BSD_SOURCE\n\1!' recpt1ctl.c \
+	# && sed -i -E 's!(#include <sys/msg.h>)!#undef _GNU_SOURCE\n#undef _BSD_SOURCE\n\1!' checksignal.c \
+	# && sed -i -E 's!(#include <ctype.h>)!\1\n#include <event.h>!' tssplitter_lite.c \
+	# && sed -i 's#-I../driver#-I../driver -I/usr/local/include#' Makefile \
+	# && make \
+	# && make install \
+	#\
 	# ccid
 	&& cd /tmp \
 	&& curl -s https://alioth.debian.org/frs/download.php/file/4205/ccid-1.4.26.tar.bz2 -o ccid-latest.tar.bz2 \
@@ -63,19 +64,48 @@ RUN set -x \
 	&& make \
 	&& make install \
 	\
+	# PX-S1UD
+	&& cd /tmp \	
+	&& curl -s http://plex-net.co.jp/plex/px-s1ud/PX-S1UD_driver_Ver.1.0.1.zip -o PX-S1UD_driver_Ver.1.0.1.zip \
+	&& unzip PX-S1UD_driver_Ver.1.0.1.zip \
+	&& cp PX-S1UD_driver_Ver.1.0.1/x64/amd64/isdbt_rio.inp /lib/firmware \
+	\
+	# arib25
+	&& cd /tmp/ \
+	&& wget http://hg.honeyplanet.jp/pt1/archive/c44e16dbb0e2.zip \
+	&& unzip c44e16dbb0e2.zip \
+	&& cd /tmp/pt1-c44e16dbb0e2/arib25/src \
+	&& make \
+	&& make install || echo "kuso" \
+	\
+	# recdvb
+	&& cd /tmp \
+	&& curl http://www13.plala.or.jp/sat/recdvb/recdvb-1.3.1.tgz -o recdvb-1.3.1.tgz \
+	&& tar xvzf recdvb-1.3.1.tgz \
+	&& cd recdvb-1.3.1 \
+	&& ./autogen.sh \
+	&& ./configure --enable-b25 \
+	&& sed -i '/#include <sys\/msg.h>/d' recpt1core.h \
+	&& sed -i -E 's!(#include <sys/msg.h>)!#undef _GNU_SOURCE\n#undef _BSD_SOURCE\n\1!' recpt1.c \
+	&& sed -i -E 's!(#include <sys/msg.h>)!#undef _GNU_SOURCE\n#undef _BSD_SOURCE\n\1!' recpt1ctl.c \
+	&& sed -i -E 's!(#include <sys/msg.h>)!#undef _GNU_SOURCE\n#undef _BSD_SOURCE\n\1!' checksignal.c \
+	&& sed -i -E 's!(#include <ctype.h>)!\1\n#include <event.h>!' tssplitter_lite.c \
+	&& sed -i 's#-I../driver#-I../driver -I/usr/local/include#' Makefile \
+	&& make \
+	&& make install \
+	\
 	# cleaning
 	&& cd / \
 	&& npm cache clean --force \
 	&& apk del --purge .build-deps \
 	&& rm -rf /tmp/* \
-	&& rm -rf /var/cache/apk/*
+	&& rm -rf /var/cache/apk/* \
+	\
+	&& chmod +x /usr/local/bin/services.sh
 
 	# forward request and error logs to docker log collector
 	#&& ln -sf /dev/stdout /usr/local/var/log/mirakurun.stdout-0.log \
 	#&& ln -sf /dev/stderr /usr/local/var/log/mirakurun.stderr-0.log
-
-COPY services.sh /usr/local/bin
-RUN chmod +x /usr/local/bin/services.sh
 
 WORKDIR /usr/lib/node_modules/mirakurun
 CMD ["/usr/local/bin/services.sh"]
