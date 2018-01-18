@@ -1,11 +1,11 @@
-FROM easypi/alpine-arm:edge
+FROM ogomez/arm32v7-alpine
 LABEL maintainer "KappaBull <kappabull@gmail.com>"
 
 ENV DOCKER="YES"
 
 RUN set -x \
 	&& apk update \
-	#&& apk upgrade --update \
+#	&& apk upgrade --update \
 	&& apk add \
 		bash \
 		'nodejs>=6.5.0' \
@@ -33,7 +33,7 @@ RUN set -x \
 		pcsc-lite-dev \
 		libusb-dev \
 	\
-	&& npm install pm2 -g \
+	&& npm install pm2 -g --unsafe \
 	\
 	&& npm install arib-b25-stream-test -g --unsafe \
 	\
