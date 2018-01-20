@@ -1,6 +1,6 @@
 path: /var/run/mirakurun.sock
 
 port: 40772
-host: 127.0.0.1
+host: ~
 
 logLevel: 2
