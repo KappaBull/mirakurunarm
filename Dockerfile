@@ -7,7 +7,6 @@ ENV DOCKER="YES"
 COPY services.sh /usr/local/bin
 RUN echo http://dl-cdn.alpinelinux.org/alpine/edge/community/ >> /etc/apk/repositories \
 	&& set -x \
-#	&& apk update \
 	&& apk upgrade --update \
 	&& apk add \
 		bash \
@@ -45,20 +44,6 @@ RUN echo http://dl-cdn.alpinelinux.org/alpine/edge/community/ >> /etc/apk/reposi
 	# mirakurun
 	&& npm install mirakurun@latest -g --unsafe --production \
 	\
-	# recpt1 PT3Command?
-	# && git clone https://github.com/stz2012/recpt1 /tmp/recpt1 \
-	# && cd /tmp/recpt1/recpt1 \
-	# && ./autogen.sh \
-	# && ./configure \
-	# && sed -i '/#include <sys\/msg.h>/d' recpt1core.h \
-	# && sed -i -E 's!(#include <sys/msg.h>)!#undef _GNU_SOURCE\n#undef _BSD_SOURCE\n\1!' recpt1.c \
-	# && sed -i -E 's!(#include <sys/msg.h>)!#undef _GNU_SOURCE\n#undef _BSD_SOURCE\n\1!' recpt1ctl.c \
-	# && sed -i -E 's!(#include <sys/msg.h>)!#undef _GNU_SOURCE\n#undef _BSD_SOURCE\n\1!' checksignal.c \
-	# && sed -i -E 's!(#include <ctype.h>)!\1\n#include <event.h>!' tssplitter_lite.c \
-	# && sed -i 's#-I../driver#-I../driver -I/usr/local/include#' Makefile \
-	# && make \
-	# && make install \
-	#\
 	# ccid
 	&& cd /tmp \
 	&& curl -s https://alioth.debian.org/frs/download.php/file/4205/ccid-1.4.26.tar.bz2 -o ccid-latest.tar.bz2 \
