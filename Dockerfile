@@ -1,7 +1,9 @@
-#FROM scratch
-FROM ogomez/arm32v7-alpine
+FROM scratch
+#FROM ogomez/arm32v7-alpine
 LABEL maintainer "KappaBull <kappa8v11@gmail.com>"
 LABEL architecture="ARM32v7"
+
+ADD rootfs.tar.xz /
 
 ENV DOCKER="YES"
 COPY services.sh /usr/local/bin
